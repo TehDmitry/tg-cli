@@ -310,6 +310,7 @@ static void stdin_read_callback (evutil_socket_t fd, short what, void *arg) {
 
 void net_loop (void) {
   delete_stdin_event = 0;
+  logprintf ("verbosity %i\n", verbosity);
   if (verbosity >= E_DEBUG) {
     logprintf ("Starting netloop\n");
   }

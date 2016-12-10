@@ -937,6 +937,8 @@ static int work_bad_msg_notification (struct tgl_state *TLS, struct connection *
 
 static int rpc_execute_answer (struct tgl_state *TLS, struct connection *c, long long msg_id) {
   int op = prefetch_int ();
+  vlogprintf (E_DEBUG, "> rpc_execute_answer %i\n", op);
+
   switch (op) {
   case CODE_msg_container:
     return work_container (TLS, c, msg_id);
@@ -958,6 +960,7 @@ static int rpc_execute_answer (struct tgl_state *TLS, struct connection *c, long
   case CODE_bad_server_salt:
     return work_bad_server_salt (TLS, c, msg_id);
   case CODE_pong:
+    vlogprintf (E_DEBUG, "> CODE_pong\n");
     return work_pong (TLS, c, msg_id);
   case CODE_msg_detailed_info:
     return work_detailed_info (TLS, c, msg_id);
@@ -1405,6 +1408,20 @@ void tgl_do_send_ping (struct tgl_state *TLS, struct connection *c) {
   x[0] = CODE_ping;
   *(long long *)(x + 1) = rand () * (1ll << 32) + rand ();
   tglmp_encrypt_send_message (TLS, c, x, 3, 0);
+}
+
+void tgl_do_send_ping_delay_disconnect (struct tgl_state *TLS, struct connection *c, long ping_id, int disconnect_delay) {
+  int x[4];
+  x[0] = CODE_ping_delay_disconnect;
+  *(long long *)(x + 1) = ping_id;
+  x[3] = disconnect_delay;
+  tglmp_encrypt_send_message (TLS, c, x, 4, 0);  
+}
+
+void tgl_do_send_updates_get_state (struct tgl_state *TLS, struct connection *c) {
+  int x[1];
+  x[0] = CODE_updates_get_state;
+  tglmp_encrypt_send_message (TLS, c, x, 1, 0);  
 }
 
 void tgl_dc_iterator (struct tgl_state *TLS, void (*iterator)(struct tgl_dc *DC)) {

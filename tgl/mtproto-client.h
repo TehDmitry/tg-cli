@@ -58,4 +58,6 @@ void tgl_dc_authorize (struct tgl_state *TLS, struct tgl_dc *DC);
 void tgls_free_dc (struct tgl_state *TLS, struct tgl_dc *DC);
 void tgls_free_pubkey (struct tgl_state *TLS);
 void tgl_do_send_ping (struct tgl_state *TLS, struct connection *c);
+void tgl_do_send_ping_delay_disconnect (struct tgl_state *TLS, struct connection *c, long ping_id, int disconnect_delay);
+void tgl_do_send_updates_get_state (struct tgl_state *TLS, struct connection *c);
 #endif

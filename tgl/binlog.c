@@ -656,7 +656,8 @@ void bl_do_user (struct tgl_state *TLS, int id, long long *access_hash, const ch
   }
   
   if (bot_info) {
-    if (!U->bot_info || U->bot_info->version != DS_LVAL (bot_info->version)) {
+    //if (!U->bot_info || U->bot_info->version != DS_LVAL (bot_info->version)) {
+    if (!U->bot_info) {
       if (U->bot_info) {
         tgls_free_bot_info (TLS, U->bot_info);
       }

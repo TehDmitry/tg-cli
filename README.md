@@ -1,6 +1,14 @@
-## Telegram messenger CLI [![Build Status](https://travis-ci.org/vysheng/tg.png)](https://travis-ci.org/vysheng/tg)
+## Telegram messenger CLI [![Build Status](https://travis-ci.org/TehDmitry/tg.svg?branch=master)](https://travis-ci.org/TehDmitry/tg)
 
 Command-line interface for [Telegram](http://telegram.org). Uses readline interface.
+
+### tgl
+library that handles telegram api and protocol.
+
+Current versions:
+
+- scheme.tl: Layer 57
+- encrypted_scheme.tl: Layer 23
 
 ### API, Protocol documentation
 
@@ -22,7 +30,7 @@ Fourth, in peer_name '#' are substitued to '@'. (Not applied to appending of '#%
 
 Clone GitHub Repository
 
-     git clone --recursive https://github.com/vysheng/tg.git && cd tg
+     git clone --recursive https://github.com/TehDmitry/tg.git && cd tg
 
 ### Python Support
 

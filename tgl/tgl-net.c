@@ -68,6 +68,7 @@
 static void fail_connection (struct connection *c);
 
 #define PING_TIMEOUT 10
+long lastPingId = 0;
 
 static void start_ping_timer (struct connection *c);
 static void ping_alarm (evutil_socket_t fd, short what, void *arg) {
@@ -80,7 +81,14 @@ static void ping_alarm (evutil_socket_t fd, short what, void *arg) {
     c->state = conn_failed;
     fail_connection (c);
   } else if (tglt_get_double_time () - c->last_receive_time > 3 * PING_TIMEOUT && c->state == conn_ready) {
+      vlogprintf (E_DEBUG,"tgl_do_send_ping\n");
     tgl_do_send_ping (c->TLS, c);
+    start_ping_timer (c);
+  } else if (tglt_get_double_time () - c->last_ping_time > 19 && c->state == conn_ready) {
+      vlogprintf (E_DEBUG-1,"============== last_ping_time > 19 %ld\n", lastPingId);
+      c->last_ping_time = tglt_get_double_time ();
+      tgl_do_send_ping_delay_disconnect(c->TLS, c, lastPingId++, 35);      
+      //tgl_do_get_difference (TLS, 0, 0, 0);
     start_ping_timer (c);
   } else {
     start_ping_timer (c);
@@ -92,7 +100,8 @@ static void stop_ping_timer (struct connection *c) {
 }
 
 static void start_ping_timer (struct connection *c) {
-  static struct timeval ptimeout = { PING_TIMEOUT, 0};
+  //static struct timeval ptimeout = { PING_TIMEOUT, 0};
+    static struct timeval ptimeout = { 2, 0};
   event_add (c->ping_ev, &ptimeout);
 }
 
@@ -329,6 +338,8 @@ struct connection *tgln_create_connection (struct tgl_state *TLS, const char *ho
   c->fd = fd;
   c->state = conn_connecting;
   c->last_receive_time = tglt_get_double_time ();
+  c->last_ping_time = tglt_get_double_time ();
+  c->last_fast_ping_time = tglt_get_double_time ();
   c->flags = 0;
   assert (!Connections[fd]);
   Connections[fd] = c;
@@ -485,6 +496,7 @@ static void try_rpc_read (struct connection *c) {
     len *= 4;
     int op;
     assert (tgln_read_in_lookup (c, &op, 4) == 4);
+    vlogprintf (E_DEBUG-2, "methods->execute %04x %i\n", op, len);
     if (c->methods->execute (TLS, c, op, len) < 0) {
       return;
     }

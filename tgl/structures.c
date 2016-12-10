@@ -370,7 +370,8 @@ struct tgl_user *tglf_fetch_alloc_user_full (struct tgl_state *TLS, struct tl_ds
 
   int flags = U->flags;
   
-  if (DS_BVAL (DS_UF->blocked)) {
+  //TODO: check if (DS_BVAL (DS_UF->blocked)) {
+  if (DS_UF->blocked) {
     flags |= TGLUF_BLOCKED;
   } else {
     flags &= ~TGLUF_BLOCKED;
@@ -841,7 +842,7 @@ struct tgl_photo *tglf_fetch_alloc_photo (struct tgl_state *TLS, struct tl_ds_ph
 struct tgl_document *tglf_fetch_alloc_video (struct tgl_state *TLS, struct tl_ds_video *DS_V) {
   if (!DS_V) { return NULL; }
   
-  if (DS_V->magic == CODE_video_empty) { return NULL; }
+  //if (DS_V->magic == CODE_video_empty) { return NULL; }
   
   struct tgl_document *D = tgl_document_get (TLS, DS_LVAL (DS_V->id));
   if (D) {
@@ -873,10 +874,11 @@ struct tgl_document *tglf_fetch_alloc_video (struct tgl_state *TLS, struct tl_ds
   return D;
 }
 
+/*
 struct tgl_document *tglf_fetch_alloc_audio (struct tgl_state *TLS, struct tl_ds_audio *DS_A) {
   if (!DS_A) { return NULL; }
   
-  if (DS_A->magic == CODE_audio_empty) { return NULL; }
+  //if (DS_A->magic == CODE_audio_empty) { return NULL; }
   
   struct tgl_document *D = tgl_document_get (TLS, DS_LVAL (DS_A->id));
   if (D) {
@@ -903,6 +905,7 @@ struct tgl_document *tglf_fetch_alloc_audio (struct tgl_state *TLS, struct tl_ds
 
   return D;
 }
+*/
 
 void tglf_fetch_document_attribute (struct tgl_state *TLS, struct tgl_document *D, struct tl_ds_document_attribute *DS_DA) {
   switch (DS_DA->magic) {
@@ -1156,18 +1159,18 @@ struct tgl_message *tglf_fetch_alloc_message_short (struct tgl_state *TLS, struc
   tgl_peer_id_t our_id = TLS->our_id;
   tgl_peer_id_t peer_id = P->id;
 
-  tgl_peer_id_t fwd_from_id;
+  /*tgl_peer_id_t fwd_from_id;
   if (DS_U->fwd_from_id) {
     fwd_from_id = tglf_fetch_peer_id (TLS, DS_U->fwd_from_id);
   } else {
     fwd_from_id = TGL_MK_USER (0);
-  }
+  }*/
 
   bl_do_edit_message (TLS, &msg_id, 
     (f & 2) ? &our_id : &peer_id,
     (f & 2) ? &peer_id : &our_id,
-    DS_U->fwd_from_id ? &fwd_from_id : NULL,
-    DS_U->fwd_date,
+    NULL,//DS_U->fwd_from_id ? &fwd_from_id : NULL,
+    NULL,//DS_U->fwd_date,
     DS_U->date,
     DS_STR (DS_U->message),
     &A,
@@ -1228,18 +1231,18 @@ struct tgl_message *tglf_fetch_alloc_message_short_chat (struct tgl_state *TLS, 
 
   tgl_peer_id_t from_id = F->id;
   tgl_peer_id_t to_id = T->id;
-  tgl_peer_id_t fwd_from_id;
+  /*tgl_peer_id_t fwd_from_id;
   if (DS_U->fwd_from_id) {
     fwd_from_id = tglf_fetch_peer_id (TLS, DS_U->fwd_from_id);
   } else {
     fwd_from_id = TGL_MK_USER (0);
-  }
+  }*/
 
   bl_do_edit_message (TLS, &msg_id,
     &from_id,
     &to_id,
-    DS_U->fwd_from_id ? &fwd_from_id : NULL,
-    DS_U->fwd_date,
+    NULL, //DS_U->fwd_from_id ? &fwd_from_id : NULL,
+    NULL, //DS_U->fwd_date,
     DS_U->date,
     DS_STR (DS_U->message),
     &A,
@@ -1266,6 +1269,7 @@ void tglf_fetch_message_media (struct tgl_state *TLS, struct tgl_message_media *
     M->photo = tglf_fetch_alloc_photo (TLS, DS_MM->photo);
     M->caption = DS_STR_DUP (DS_MM->caption);
     break;
+    /*
   case CODE_message_media_video:
   case CODE_message_media_video_l27:
     M->type = tgl_message_media_video;
@@ -1277,6 +1281,7 @@ void tglf_fetch_message_media (struct tgl_state *TLS, struct tgl_message_media *
     M->document = tglf_fetch_alloc_audio (TLS, DS_MM->audio);
     M->caption = DS_STR_DUP (DS_MM->caption);
     break;
+     */
   case CODE_message_media_document:
     M->type = tgl_message_media_document;
     M->document = tglf_fetch_alloc_document (TLS, DS_MM->document);
@@ -1544,7 +1549,7 @@ struct tgl_message *tglf_fetch_alloc_message (struct tgl_state *TLS, struct tl_d
       P = F;
     }
   }
-  
+/*  
   tgl_peer_t *FF = NULL;
 
   if (DS_M->fwd_from_id) {
@@ -1556,7 +1561,7 @@ struct tgl_message *tglf_fetch_alloc_message (struct tgl_state *TLS, struct tl_d
       return NULL;
     }
   }
-
+*/
   tgl_message_id_t msg_id = tgl_peer_id_to_msg_id (P->id, DS_LVAL (DS_M->id));
   struct tgl_message *M = tgl_message_get (TLS, &msg_id);
 
@@ -1594,18 +1599,23 @@ struct tgl_message *tglf_fetch_alloc_message (struct tgl_state *TLS, struct tl_d
   
     tgl_peer_id_t to_id = T->id;
 
+    
+    /*
     tgl_peer_id_t fwd_from_id;
     if (DS_M->fwd_from_id) {
       fwd_from_id = FF->id;
     } else {
       fwd_from_id = TGL_MK_USER (0);
     }
-
+    */
+    
     bl_do_edit_message (TLS, &msg_id,
       DS_M->from_id ? &from_id : NULL,
       &to_id,
-      DS_M->fwd_from_id ? &fwd_from_id : NULL,
-      DS_M->fwd_date,
+//      DS_M->fwd_from_id ? &fwd_from_id : NULL,
+        NULL,
+//      DS_M->fwd_date,
+        0,
       DS_M->date,
       DS_STR (DS_M->message),
       DS_M->media,
@@ -1913,10 +1923,12 @@ struct tgl_message *tglf_fetch_alloc_encrypted_message (struct tgl_state *TLS, s
 }
 
 struct tgl_bot_info *tglf_fetch_alloc_bot_info (struct tgl_state *TLS, struct tl_ds_bot_info *DS_BI) {
-  if (!DS_BI || DS_BI->magic == CODE_bot_info_empty) { return NULL; }
+  //TODO: check
+    //if (!DS_BI || DS_BI->magic == CODE_bot_info_empty) { return NULL; }
+    if (!DS_BI) { return NULL; }
   struct tgl_bot_info *B = talloc (sizeof (*B));
-  B->version = DS_LVAL (DS_BI->version);
-  B->share_text = DS_STR_DUP (DS_BI->share_text);
+  //B->version = DS_LVAL (DS_BI->version);
+  //B->share_text = DS_STR_DUP (DS_BI->share_text);
   B->description = DS_STR_DUP (DS_BI->description);
 
   B->commands_num = DS_LVAL (DS_BI->commands->cnt);

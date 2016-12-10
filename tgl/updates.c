@@ -153,8 +153,8 @@ void tglu_work_update (struct tgl_state *TLS, int check_only, struct tl_ds_updat
     }
   }
 
-  if (DS_U->channel_pts) {
-    assert (DS_U->channel_pts_count);
+  if (DS_U->pts) {
+    assert (DS_U->pts_count);
     int channel_id;
     if (DS_U->channel_id) {
       channel_id = DS_LVAL (DS_U->channel_id);
@@ -173,7 +173,7 @@ void tglu_work_update (struct tgl_state *TLS, int check_only, struct tl_ds_updat
       return;
     }
 
-    if (!check_only && tgl_check_channel_pts_diff (TLS, E, DS_LVAL (DS_U->channel_pts), DS_LVAL (DS_U->channel_pts_count)) <= 0) {
+    if (!check_only && tgl_check_channel_pts_diff (TLS, E, DS_LVAL (DS_U->pts), DS_LVAL (DS_U->pts_count)) <= 0) {
       return;
     }
   }
@@ -348,7 +348,7 @@ void tglu_work_update (struct tgl_state *TLS, int check_only, struct tl_ds_updat
     {
     }
     break;*/
-  case CODE_update_new_encrypted_message:
+  /*case CODE_update_new_encrypted_message:
     {
       struct tgl_message *M = tglf_fetch_alloc_encrypted_message (TLS, DS_U->encr_message);
       if (M) {
@@ -356,9 +356,10 @@ void tglu_work_update (struct tgl_state *TLS, int check_only, struct tl_ds_updat
       }
     }
     break;
+   */
   case CODE_update_encryption:
     {
-      struct tgl_secret_chat *E = tglf_fetch_alloc_encrypted_chat (TLS, DS_U->encr_chat);     
+      struct tgl_secret_chat *E = tglf_fetch_alloc_encrypted_chat (TLS, DS_U->chat);
       vlogprintf (E_DEBUG, "Secret chat state = %d\n", E->state);
       if (E->state == sc_ok) {
         tgl_do_send_encr_chat_layer (TLS, E);
@@ -447,11 +448,17 @@ void tglu_work_update (struct tgl_state *TLS, int check_only, struct tl_ds_updat
     break;
   case CODE_update_service_notification:
     {
+      /*
       vlogprintf (E_ERROR, "Notification %.*s: %.*s\n", DS_RSTR (DS_U->type), DS_RSTR (DS_U->message_text));
       if (TLS->callback.notification) {
         TLS->callback.notification (TLS, DS_U->type->data, DS_U->message_text->data);
       }
-    }
+       */
+      vlogprintf (E_ERROR, "Notification %.*s: %.*s\n", DS_RSTR (DS_U->type), DS_RSTR (DS_U->message->message));
+      if (TLS->callback.notification) {
+        TLS->callback.notification (TLS, DS_U->type->data, DS_U->message->message->data);
+      }
+  }
     break;
   case CODE_update_privacy:
     vlogprintf (E_NOTICE, "privacy change update\n");
@@ -466,7 +473,7 @@ void tglu_work_update (struct tgl_state *TLS, int check_only, struct tl_ds_updat
     break;
   case CODE_update_read_history_inbox:
     {
-      tgl_peer_id_t id = tglf_fetch_peer_id (TLS, DS_U->peer);
+      tgl_peer_id_t id = tglf_fetch_peer_id (TLS, DS_U->peer->peer);
       tgl_peer_t *P = tgl_peer_get (TLS, id);
       if (P && (P->flags & TGLPF_CREATED)) {
         if (tgl_get_peer_type (P->id) == TGL_PEER_USER) {
@@ -479,7 +486,7 @@ void tglu_work_update (struct tgl_state *TLS, int check_only, struct tl_ds_updat
     break;
   case CODE_update_read_history_outbox:
     {
-      tgl_peer_id_t id = tglf_fetch_peer_id (TLS, DS_U->peer);
+      tgl_peer_id_t id = tglf_fetch_peer_id (TLS, DS_U->peer->peer);
       tgl_peer_t *P = tgl_peer_get (TLS, id);
       if (P && (P->flags & TGLPF_CREATED)) {
         if (tgl_get_peer_type (P->id) == TGL_PEER_USER) {
@@ -511,8 +518,8 @@ void tglu_work_update (struct tgl_state *TLS, int check_only, struct tl_ds_updat
     break;
   case CODE_update_channel:
     break;
-  case CODE_update_channel_group:
-    break;
+  /*case CODE_update_channel_group:
+    break;*/
   case CODE_update_new_channel_message:
     {
       int new_msg = 0;
@@ -556,9 +563,9 @@ void tglu_work_update (struct tgl_state *TLS, int check_only, struct tl_ds_updat
   if (DS_U->qts) {
     bl_do_set_qts (TLS, DS_LVAL (DS_U->qts));
   }
-  if (DS_U->channel_pts) {
-    assert (DS_U->channel_pts_count);
-    
+  if (DS_U->pts) {
+    assert (DS_U->pts_count);
+
     int channel_id;
     if (DS_U->channel_id) {
       channel_id = DS_LVAL (DS_U->channel_id);
@@ -569,11 +576,14 @@ void tglu_work_update (struct tgl_state *TLS, int check_only, struct tl_ds_updat
       channel_id = DS_LVAL (DS_U->message->to_id->channel_id);
     }    
 
-    bl_do_set_channel_pts (TLS, channel_id, DS_LVAL (DS_U->channel_pts));
+    bl_do_set_channel_pts (TLS, channel_id, DS_LVAL (DS_U->pts));
   }
 }
 
 void tglu_work_updates (struct tgl_state *TLS, int check_only, struct tl_ds_updates *DS_U) {
+
+  vlogprintf (E_DEBUG, "> tglu_work_updates");
+
   if (check_only > 0 || (TLS->locks & TGL_LOCK_DIFF)) {
     return;
   }
@@ -604,6 +614,9 @@ void tglu_work_updates (struct tgl_state *TLS, int check_only, struct tl_ds_upda
 }
 
 void tglu_work_updates_combined (struct tgl_state *TLS, int check_only, struct tl_ds_updates *DS_U) {
+
+  vlogprintf (E_DEBUG, "> tglu_work_updates_combined");
+
   if (check_only > 0 || (TLS->locks & TGL_LOCK_DIFF)) {
     return;
   }
@@ -757,6 +770,10 @@ void tglu_work_update_short_sent_message (struct tgl_state *TLS, int check_only,
 }
 
 void tglu_work_any_updates (struct tgl_state *TLS, int check_only, struct tl_ds_updates *DS_U, void *extra) {
+  vlogprintf (E_DEBUG-2, "> tglu_work_any_updates %i\n", check_only);
+  tglu_work_updates_too_long (TLS, check_only, DS_U);
+
+  
   if (check_only > 0 || (TLS->locks & TGL_LOCK_DIFF)) {
     return;
   }

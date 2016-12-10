@@ -63,6 +63,8 @@ struct connection {
   struct event *read_ev;
   struct event *write_ev;
   double last_receive_time;
+  double last_ping_time;
+  double last_fast_ping_time;
 };
 
 //extern struct connection *Connections[];
