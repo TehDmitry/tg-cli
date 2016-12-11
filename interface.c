@@ -4336,7 +4336,7 @@ void print_message (struct in_ev *ev, struct tgl_message *M) {
       mpop_color (ev);
       mprintf (ev, " ");
       print_user_name (ev, M->from_id, tgl_peer_get (TLS, M->from_id));
-      mpush_color (ev, COLOR_BLUE);
+      mpush_color (ev, COLOR_NORMAL);
       if (M->flags & TGLMF_UNREAD) {
         mprintf (ev, " >>> ");
       } else {
@@ -4387,7 +4387,7 @@ void print_message (struct in_ev *ev, struct tgl_message *M) {
     if (!tgl_cmp_peer_id (M->from_id, TLS->our_id)) {
       mpush_color (ev, COLOR_GREEN);
     } else {
-      mpush_color (ev, COLOR_BLUE);
+      mpush_color (ev, COLOR_NORMAL);
     }
     if (M->flags & TGLMF_UNREAD) {
       mprintf (ev, " >>> ");
@@ -4411,10 +4411,10 @@ void print_message (struct in_ev *ev, struct tgl_message *M) {
       if (!tgl_cmp_peer_id (M->from_id, TLS->our_id)) {
         mpush_color (ev, COLOR_GREEN);
       } else {
-        mpush_color (ev, COLOR_BLUE);
+        mpush_color (ev, COLOR_NORMAL);
       }
     } else {
-      mpush_color (ev, COLOR_BLUE);
+      mpush_color (ev, COLOR_NORMAL);
     }
     if (M->flags & TGLMF_UNREAD) {
       mprintf (ev, " >>> ");
