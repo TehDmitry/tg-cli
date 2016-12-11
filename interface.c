@@ -4283,6 +4283,9 @@ void print_service_message (struct in_ev *ev, struct tgl_message *M) {
   case tgl_message_action_migrated_from:
     mprintf (ev, " migrated from group '%s'\n", M->action.title);
     break;
+  case tgl_message_action_pin:
+    mprintf (ev, " pinned message\n");
+    break;    
   }
   mpop_color (ev);
   //print_end ();

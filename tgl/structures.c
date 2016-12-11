@@ -1108,7 +1108,12 @@ void tglf_fetch_message_action (struct tgl_state *TLS, struct tgl_message_action
     M->type = tgl_message_action_migrated_from;
     M->title = DS_STR_DUP (DS_MA->title);
     break;
+  case CODE_message_action_pin_message:
+    M->type = tgl_message_action_pin;
+    M->user = DS_LVAL (DS_MA->user_id);
+    break;    
   default:
+    vlogprintf (E_ERROR, "Unknown magic 0x%08x\n", DS_MA->magic);
     assert (0);
   }
 }
@@ -2156,6 +2161,7 @@ void tgls_free_message_action (struct tgl_state *TLS, struct tgl_message_action 
   case tgl_message_action_abort_key:
   case tgl_message_action_noop:
   case tgl_message_action_migrated_to:
+  case tgl_message_action_pin:    
     return;
   case tgl_message_action_request_key:
   case tgl_message_action_accept_key:

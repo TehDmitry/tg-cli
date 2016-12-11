@@ -250,7 +250,8 @@ enum tgl_message_action_type {
   tgl_message_action_accept_key,
   tgl_message_action_channel_create,
   tgl_message_action_migrated_to,
-  tgl_message_action_migrated_from
+  tgl_message_action_migrated_from,
+  tgl_message_action_pin
 };
 
 enum tgl_typing_status {
