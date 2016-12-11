@@ -159,6 +159,7 @@ void tglu_work_update (struct tgl_state *TLS, int check_only, struct tl_ds_updat
     if (DS_U->channel_id) {
       channel_id = DS_LVAL (DS_U->channel_id);
     } else {
+      vlogprintf (E_WARNING, "tglu_work_update with magic 0x%08x\n", DS_U->magic);
       assert (DS_U->message);
       if (!DS_U->message->to_id) {
         return;
@@ -549,7 +550,11 @@ void tglu_work_update (struct tgl_state *TLS, int check_only, struct tl_ds_updat
     break;
   case CODE_update_bot_inline_query:
     break;
+  //Layer 57
+  case CODE_update_read_channel_outbox:
+    break;    
   default:
+    vlogprintf (E_ERROR, "Unknown magic 0x%08x\n", DS_U->magic);
     assert (0);
   }
   
