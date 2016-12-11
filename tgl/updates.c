@@ -153,11 +153,14 @@ void tglu_work_update (struct tgl_state *TLS, int check_only, struct tl_ds_updat
     }
   }
 
-  if (DS_U->pts) {
+   if (DS_U->pts) {
     assert (DS_U->pts_count);
     int channel_id;
     if (DS_U->channel_id) {
       channel_id = DS_LVAL (DS_U->channel_id);
+    } else if (DS_U->read_history_outbox_peer){
+      vlogprintf (E_WARNING, "updateReadHistoryOutbox not supported yet\n");
+      return;
     } else {
       vlogprintf (E_WARNING, "tglu_work_update with magic 0x%08x\n", DS_U->magic);
       assert (DS_U->message);
