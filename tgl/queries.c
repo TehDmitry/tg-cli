@@ -1581,6 +1581,7 @@ static void _tgl_do_get_history (struct tgl_state *TLS, struct get_history_extra
   if (tgl_get_peer_type (E->id) != TGL_PEER_CHANNEL || (C && (C->flags & TGLCHF_MEGAGROUP))) {
     out_int (CODE_messages_get_history);
     out_peer_id (TLS, E->id);
+    out_int (0); //offset_date
   } else {
     //TODO check: out_int (CODE_channels_get_important_history);
     out_int (CODE_channels_get_messages);
