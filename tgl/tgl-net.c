@@ -85,7 +85,6 @@ static void ping_alarm (evutil_socket_t fd, short what, void *arg) {
     tgl_do_send_ping (c->TLS, c);
     start_ping_timer (c);
   } else if (tglt_get_double_time () - c->last_ping_time > 10 && c->state == conn_ready) {
-      vlogprintf (E_DEBUG-1,"============== last_ping_time > 10 %ld\n", lastPingId);
       c->last_ping_time = tglt_get_double_time ();
       tgl_do_send_ping_delay_disconnect(c->TLS, c, lastPingId++, 60);      
     start_ping_timer (c);
@@ -495,7 +494,6 @@ static void try_rpc_read (struct connection *c) {
     len *= 4;
     int op;
     assert (tgln_read_in_lookup (c, &op, 4) == 4);
-    vlogprintf (E_DEBUG-2, "methods->execute %04x %i\n", op, len);
     if (c->methods->execute (TLS, c, op, len) < 0) {
       return;
     }
