@@ -27,7 +27,7 @@ inputPeerChannel#20adaef8 channel_id:int access_hash:long = InputPeer;
 
 inputUserEmpty#b98886cf = InputUser;
 inputUserSelf#f7c1b13f = InputUser;
-inputUser#d8292816 user_id:int access_hash:long = InputUser;
+inputUser#d8292816 input_user_id:int access_hash:long = InputUser;
 
 inputPhoneContact#f392b7f4 client_id:long phone:string first_name:string last_name:string = InputContact;
 
@@ -41,12 +41,12 @@ inputMediaGeoPoint#f9c44144 geo_point:InputGeoPoint = InputMedia;
 inputMediaContact#a6e45987 phone_number:string first_name:string last_name:string = InputMedia;
 inputMediaUploadedDocument#d070f1e9 flags:# file:InputFile mime_type:string attributes:Vector<DocumentAttribute> caption:string stickers:flags.0?Vector<InputDocument> = InputMedia;
 inputMediaUploadedThumbDocument#50d88cae flags:# file:InputFile thumb:InputFile mime_type:string attributes:Vector<DocumentAttribute> caption:string stickers:flags.0?Vector<InputDocument> = InputMedia;
-inputMediaDocument#1a77f29c id:InputDocument caption:string = InputMedia;
+inputMediaDocument#1a77f29c media_document_id:InputDocument caption:string = InputMedia;
 inputMediaVenue#2827a81a geo_point:InputGeoPoint title:string address:string provider:string venue_id:string = InputMedia;
 inputMediaGifExternal#4843b0fd url:string q:string = InputMedia;
 inputMediaPhotoExternal#b55f4f18 url:string caption:string = InputMedia;
 inputMediaDocumentExternal#e5e9607c url:string caption:string = InputMedia;
-inputMediaGame#d33f43f3 id:InputGame = InputMedia;
+inputMediaGame#d33f43f3 game_id:InputGame = InputMedia;
 
 inputChatPhotoEmpty#1ca48f57 = InputChatPhoto;
 inputChatUploadedPhoto#927c55b4 file:InputFile = InputChatPhoto;
@@ -246,7 +246,7 @@ updateUserPhoto#95313b0c user_id:int date:int photo:UserProfilePhoto previous:Bo
 updateContactRegistered#2575bbb9 user_id:int date:int = Update;
 updateContactLink#9d2e67c5 user_id:int my_link:ContactLink foreign_link:ContactLink = Update;
 updateNewAuthorization#8f06529a auth_key_id:long date:int device:string location:string = Update;
-updateNewEncryptedMessage#12bcbd9a message:EncryptedMessage qts:int = Update;
+updateNewEncryptedMessage#12bcbd9a new_encrypted_message:EncryptedMessage qts:int = Update;
 updateEncryptedChatTyping#1710f156 chat_id:int = Update;
 updateEncryption#b4a2e88d chat:EncryptedChat date:int = Update;
 updateEncryptedMessagesRead#38fe25b7 chat_id:int max_date:int date:int = Update;
@@ -255,11 +255,11 @@ updateChatParticipantDelete#6e5f8c22 chat_id:int user_id:int version:int = Updat
 updateDcOptions#8e5e9873 dc_options:Vector<DcOption> = Update;
 updateUserBlocked#80ece81a user_id:int blocked:Bool = Update;
 updateNotifySettings#bec268ef peer:NotifyPeer notify_settings:PeerNotifySettings = Update;
-updateServiceNotification#382dd3e4 type:string message:string media:MessageMedia popup:Bool = Update;
+updateServiceNotification#382dd3e4 type:string service_notification_message:string media:MessageMedia popup:Bool = Update;
 updatePrivacy#ee3b272a key:PrivacyKey rules:Vector<PrivacyRule> = Update;
 updateUserPhone#12b9417b user_id:int phone:string = Update;
-updateReadHistoryInbox#9961fd5c peer:Peer max_id:int pts:int pts_count:int = Update;
-updateReadHistoryOutbox#2f2f21bf peer:Peer max_id:int pts:int pts_count:int = Update;
+updateReadHistoryInbox#9961fd5c read_history_inbox_peer:Peer max_id:int pts:int pts_count:int = Update;
+updateReadHistoryOutbox#2f2f21bf read_history_outbox_peer:Peer max_id:int pts:int pts_count:int = Update;
 updateWebPage#7f891213 webpage:WebPage pts:int pts_count:int = Update;
 updateReadMessagesContents#68c13933 messages:Vector<int> pts:int pts_count:int = Update;
 updateChannelTooLong#eb0467fb flags:# channel_id:int pts:flags.0?int = Update;
@@ -275,14 +275,14 @@ updateStickerSetsOrder#bb2d201 flags:# masks:flags.0?true order:Vector<long> = U
 updateStickerSets#43ae3dec = Update;
 updateSavedGifs#9375341e = Update;
 updateBotInlineQuery#54826690 flags:# query_id:long user_id:int query:string geo:flags.0?GeoPoint offset:string = Update;
-updateBotInlineSend#e48f964 flags:# user_id:int query:string geo:flags.0?GeoPoint id:string msg_id:flags.1?InputBotInlineMessageID = Update;
+updateBotInlineSend#e48f964 flags:# user_id:int query:string geo:flags.0?GeoPoint bot_inline_send_id:string msg_id:flags.1?InputBotInlineMessageID = Update;
 updateEditChannelMessage#1b3f4df7 message:Message pts:int pts_count:int = Update;
 updateChannelPinnedMessage#98592475 channel_id:int id:int = Update;
-updateBotCallbackQuery#e73547e1 flags:# query_id:long user_id:int peer:Peer msg_id:int chat_instance:long data:flags.0?bytes game_short_name:flags.1?string = Update;
+updateBotCallbackQuery#e73547e1 flags:# query_id:long user_id:int bot_callback_query_peer:Peer bot_callback_query_msg_id:int chat_instance:long data:flags.0?bytes game_short_name:flags.1?string = Update;
 updateEditMessage#e40370a3 message:Message pts:int pts_count:int = Update;
 updateInlineBotCallbackQuery#f9d27a5a flags:# query_id:long user_id:int msg_id:InputBotInlineMessageID chat_instance:long data:flags.0?bytes game_short_name:flags.1?string = Update;
 updateReadChannelOutbox#25d6c9c7 channel_id:int max_id:int = Update;
-updateDraftMessage#ee2bb969 peer:Peer draft:DraftMessage = Update;
+updateDraftMessage#ee2bb969 draft_message_peer:Peer draft:DraftMessage = Update;
 updateReadFeaturedStickers#571d2742 = Update;
 updateRecentStickers#9a422c20 = Update;
 updateConfig#a229dd06 = Update;
@@ -488,7 +488,7 @@ messageEntityItalic#826f8b60 offset:int length:int = MessageEntity;
 messageEntityCode#28a20571 offset:int length:int = MessageEntity;
 messageEntityPre#73924be0 offset:int length:int language:string = MessageEntity;
 messageEntityTextUrl#76a6d327 offset:int length:int url:string = MessageEntity;
-messageEntityMentionName#352dca58 offset:int length:int user_id:int = MessageEntity;
+messageEntityMentionName#352dca58 offset:int length:int entity_mention_name_user_id:int = MessageEntity;
 inputMessageEntityMentionName#208e68c9 offset:int length:int user_id:InputUser = MessageEntity;
 
 inputChannelEmpty#ee8c1e86 = InputChannel;
@@ -614,7 +614,7 @@ stickerSetMultiCovered#3407e51b set:StickerSet covers:Vector<Document> = Sticker
 maskCoords#aed6dbb2 n:int x:double y:double zoom:double = MaskCoords;
 
 inputStickeredMediaPhoto#4a992157 id:InputPhoto = InputStickeredMedia;
-inputStickeredMediaDocument#438865b id:InputDocument = InputStickeredMedia;
+inputStickeredMediaDocument#438865b stickered_media_document_id:InputDocument = InputStickeredMedia;
 
 game#bdf9653b flags:# id:long access_hash:long short_name:string title:string description:string photo:Photo document:flags.0?Document = Game;
 
