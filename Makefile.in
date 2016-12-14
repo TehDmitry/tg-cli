@@ -50,6 +50,8 @@ ${TG_OBJECTS}: ${OBJ}/%.o: ${srcdir}/%.c | create_dirs_and_headers
 ${EXE}/telegram-cli: ${TG_OBJECTS} ${LIB}/libtgl.a
 	${CC} $^ ${LINK_FLAGS} -o $@
 
+	cp shared/* bin
+	
 clean:
 	rm -rf ${DIR_LIST}
 
