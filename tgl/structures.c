@@ -1326,6 +1326,7 @@ void tglf_fetch_message_media (struct tgl_state *TLS, struct tgl_message_media *
     M->type = tgl_message_media_unsupported;
     break;
   default:
+    vlogprintf (E_ERROR, "Unknown magic in tglf_fetch_message_media 0x%08x\n", DS_MM->magic);
     assert (0);
   }
 }
@@ -1389,6 +1390,7 @@ void tglf_fetch_message_media_encrypted (struct tgl_state *TLS, struct tgl_messa
     M->user_id = DS_LVAL (DS_DMM->user_id);
     break;
   default:
+    vlogprintf (E_ERROR, "Unknown magic in tglf_fetch_message_media_encrypted 0x%08x\n", DS_DMM->magic);
     assert (0);
   }
 }
@@ -1473,6 +1475,7 @@ void tglf_fetch_message_action_encrypted (struct tgl_state *TLS, struct tgl_mess
     M->exchange_id = DS_LVAL (DS_DMA->exchange_id);
     break;
   default:
+    vlogprintf (E_ERROR, "Unknown magic in tglf_fetch_message_action_encrypted 0x%08x\n", DS_DMA->magic);
     assert (0);
   }
 }
@@ -1516,6 +1519,7 @@ void tglf_fetch_message_entity (struct tgl_state *TLS, struct tgl_message_entity
     E->extra = DS_STR_DUP (DS_ME->url);
     break;
   default:
+    vlogprintf (E_ERROR, "Unknown magic in tglf_fetch_message_entity 0x%08x\n", DS_ME->magic);
     assert (0);
   }
 }
