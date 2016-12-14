@@ -1,6 +1,7 @@
-## Telegram messenger CLI [![Build Status](https://travis-ci.org/TehDmitry/tg.svg?branch=master)](https://travis-ci.org/TehDmitry/tg)
+## Telegram messenger CLI [![Build Status](https://travis-ci.org/TehDmitry/tg-cli.svg?branch=master)](https://travis-ci.org/TehDmitry/tg-cli)
 
 Command-line interface for [Telegram](http://telegram.org). Uses readline interface.
+forked from [vysheng/tg](https://github.com/vysheng/tg) [6547c0b](https://github.com/vysheng/tg/commit/6547c0b21b977b327b3c5e8142963f4bc246187a)
 
 ### tgl
 library that handles telegram api and protocol.
@@ -120,7 +121,7 @@ Then build:
 If you manage to launch it on other UNIX, please let me know.
 
 ### Contacts 
-If you would like to ask a question, you can write to my telegram or to the github (or both). To contact me via telegram, you should use import_card method with argument 000653bf:0738ca5d:5521fbac:29246815:a27d0cda
+If you would like to ask a question, you can write to my telegram or to the github (or both).
 
 
 ### Usage
