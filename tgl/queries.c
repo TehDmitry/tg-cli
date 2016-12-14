@@ -237,8 +237,9 @@ struct query *tglq_send_query_ex (struct tgl_state *TLS, struct tgl_dc *DC, int 
   if (!(DC->flags & 4) && !(flags & QUERY_FORCE_SEND)) {
     q->session_id = 0;
   }
+  int seq_no = q->seq_no;
   vlogprintf (E_DEBUG, "Msg_id is %" INT64_PRINTF_MODIFIER "d %p\n", q->msg_id, q);
-  vlogprintf (E_NOTICE, "Sent query #%" INT64_PRINTF_MODIFIER "d of size %d to DC %d\n", q->msg_id, 4 * ints, DC->id);
+  vlogprintf (E_DEBUG, "Sent query #%" INT64_PRINTF_MODIFIER "d of size %d to DC %d\n", q->msg_id, 4 * ints, DC->id);
   q->methods = methods;
   q->type = methods->type;
   q->DC = DC;
@@ -255,6 +256,7 @@ struct query *tglq_send_query_ex (struct tgl_state *TLS, struct tgl_dc *DC, int 
   q->callback = callback;
   q->callback_extra = callback_extra;
   TLS->active_queries ++;
+  vlogprintf (E_NOTICE, "<< Sent query magic 0x%08x size %d seq %i\n", ((int*)data)[0], 4 * ints, seq_no);
   return q;
 }
 
@@ -3830,7 +3832,6 @@ void tgl_do_get_difference (struct tgl_state *TLS, int sync_from_start, void (*c
     out_int (TLS->pts);
     out_int (TLS->date);
     out_int (TLS->qts);
-    vlogprintf (E_DEBUG-2, "CODE_updates_get_difference pts: %i date: %i qts: %i\n", TLS->pts, TLS->date, TLS->qts);
     tglq_send_query (TLS, TLS->DC_working, packet_ptr - packet_buffer, packet_buffer, &get_difference_methods, 0, callback, callback_extra);
   } else {
     out_int (CODE_updates_get_state);

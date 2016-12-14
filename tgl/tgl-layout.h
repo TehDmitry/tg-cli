@@ -197,7 +197,8 @@ tgl_message_entity_bold,
 tgl_message_entity_italic,
 tgl_message_entity_code,
 tgl_message_entity_pre,
-tgl_message_entity_text_url
+tgl_message_entity_text_url,
+tgl_message_entity_mention_name
 };
 
 struct tgl_message_entity {

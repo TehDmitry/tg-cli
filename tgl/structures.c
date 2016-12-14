@@ -1518,6 +1518,9 @@ void tglf_fetch_message_entity (struct tgl_state *TLS, struct tgl_message_entity
     E->type = tgl_message_entity_text_url;
     E->extra = DS_STR_DUP (DS_ME->url);
     break;
+  case CODE_message_entity_mention_name:
+    E->type = tgl_message_entity_mention_name;
+    break;    
   default:
     vlogprintf (E_ERROR, "Unknown magic in tglf_fetch_message_entity 0x%08x\n", DS_ME->magic);
     assert (0);

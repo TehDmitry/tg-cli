@@ -41,7 +41,7 @@ static void fetch_dc_option (struct tgl_state *TLS, struct tl_ds_dc_option *DS_D
 }
 
 int tgl_check_pts_diff (struct tgl_state *TLS, int pts, int pts_count) {
-  vlogprintf (E_DEBUG - 1, "pts = %d, pts_count = %d\n", pts, pts_count);
+  vlogprintf (E_NOTICE, "pts = %d, pts_count = %d\n", pts, pts_count);
   if (!TLS->pts) {
     return 1;
   }
@@ -84,6 +84,7 @@ int tgl_check_qts_diff (struct tgl_state *TLS, int qts, int qts_count) {
 
 int tgl_check_channel_pts_diff (struct tgl_state *TLS, tgl_peer_t *_E, int pts, int pts_count) {
   struct tgl_channel *E = &_E->channel;
+  vlogprintf (E_NOTICE, "channel %d: pts = %d, pts_count = %d, current_pts = %d\n", tgl_get_peer_id (E->id), pts, pts_count, E->pts);
   vlogprintf (E_DEBUG - 1, "channel %d: pts = %d, pts_count = %d, current_pts = %d\n", tgl_get_peer_id (E->id), pts, pts_count, E->pts);
   if (!E->pts) {
     return 1;
@@ -556,8 +557,10 @@ void tglu_work_update (struct tgl_state *TLS, int check_only, struct tl_ds_updat
   //Layer 57
   case CODE_update_read_channel_outbox:
     break;    
+  case CODE_update_draft_message:
+    break;       
   default:
-    vlogprintf (E_ERROR, "Unknown magic 0x%08x\n", DS_U->magic);
+    vlogprintf (E_ERROR, "Unknown magic in tglu_work_update 0x%08x\n", DS_U->magic);
     assert (0);
   }
   
@@ -778,7 +781,7 @@ void tglu_work_update_short_sent_message (struct tgl_state *TLS, int check_only,
 }
 
 void tglu_work_any_updates (struct tgl_state *TLS, int check_only, struct tl_ds_updates *DS_U, void *extra) {
-  vlogprintf (E_DEBUG-2, "> tglu_work_any_updates %i\n", check_only);
+  vlogprintf (E_DEBUG, "> tglu_work_any_updates %i\n", check_only);
   tglu_work_updates_too_long (TLS, check_only, DS_U);
 
   
