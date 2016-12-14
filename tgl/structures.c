@@ -1111,7 +1111,11 @@ void tglf_fetch_message_action (struct tgl_state *TLS, struct tgl_message_action
   case CODE_message_action_pin_message:
     M->type = tgl_message_action_pin;
     M->user = DS_LVAL (DS_MA->user_id);
-    break;    
+    break;
+  case CODE_message_action_game_score:
+    M->type = tgl_message_action_game_score;
+    M->game_id = DS_LVAL (DS_MA->game_id);
+    M->score = DS_LVAL (DS_MA->score);
   default:
     vlogprintf (E_ERROR, "Unknown magic 0x%08x\n", DS_MA->magic);
     assert (0);
@@ -1315,6 +1319,9 @@ void tglf_fetch_message_media (struct tgl_state *TLS, struct tgl_message_media *
     M->venue.provider = DS_STR_DUP (DS_MM->provider);
     M->venue.venue_id = DS_STR_DUP (DS_MM->venue_id);   
     break;
+  case CODE_message_media_game:
+    M->type = tgl_message_media_game;
+    break;    
   case CODE_message_media_unsupported:
     M->type = tgl_message_media_unsupported;
     break;
@@ -2162,6 +2169,7 @@ void tgls_free_message_action (struct tgl_state *TLS, struct tgl_message_action 
   case tgl_message_action_noop:
   case tgl_message_action_migrated_to:
   case tgl_message_action_pin:    
+  case tgl_message_action_game_score:
     return;
   case tgl_message_action_request_key:
   case tgl_message_action_accept_key:

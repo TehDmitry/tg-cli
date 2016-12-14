@@ -221,7 +221,8 @@ enum tgl_message_media_type {
   tgl_message_media_webpage,
   tgl_message_media_venue,
   tgl_message_media_video,
-  tgl_message_media_audio
+  tgl_message_media_audio,
+  tgl_message_media_game
 };
 
 enum tgl_message_action_type {
@@ -251,7 +252,8 @@ enum tgl_message_action_type {
   tgl_message_action_channel_create,
   tgl_message_action_migrated_to,
   tgl_message_action_migrated_from,
-  tgl_message_action_pin
+  tgl_message_action_pin,
+  tgl_message_action_game_score
 };
 
 enum tgl_typing_status {
@@ -542,6 +544,8 @@ struct tgl_message_action {
       long long exchange_id;
       long long key_fingerprint;
     };
+    long long game_id;
+    int score;
   };
 };
 

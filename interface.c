@@ -4004,6 +4004,9 @@ void print_media (struct in_ev *ev, struct tgl_message_media *M) {
 
       mprintf (ev, "]");
       return;
+    case tgl_message_media_game:
+      mprintf (ev, "[game]");
+      return;      
       
     default:
       mprintf (ev, "x = %d\n", M->type);
@@ -4285,6 +4288,8 @@ void print_service_message (struct in_ev *ev, struct tgl_message *M) {
     break;
   case tgl_message_action_pin:
     mprintf (ev, " pinned message\n");
+  case tgl_message_action_game_score:
+    mprintf (ev, " scored %d in game %lld\n", M->action.score, M->action.game_id);    
     break;    
   }
   mpop_color (ev);
