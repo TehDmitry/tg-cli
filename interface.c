@@ -3051,12 +3051,6 @@ void type_in_chat_notification_upd (struct tgl_state *TLSR, struct tgl_user *U, 
 
 void print_message_gw (struct tgl_state *TLSR, struct tgl_message *M) {
   assert (TLSR == TLS);
-  #ifdef USE_LUA
-    lua_new_msg (M);
-  #endif
-  #ifdef USE_PYTHON
-    py_new_msg (M);
-  #endif
   if (!binlog_read) { return; }
   if (tgl_get_peer_type (M->to_id) == TGL_PEER_ENCR_CHAT) { 
     write_secret_chat_file ();
@@ -3079,6 +3073,12 @@ void print_message_gw (struct tgl_state *TLSR, struct tgl_message *M) {
     #endif
   }
   mprint_end (ev);
+  #ifdef USE_LUA
+    lua_new_msg (M);
+  #endif
+  #ifdef USE_PYTHON
+    py_new_msg (M);
+  #endif  
 }
 
 void our_id_gw (struct tgl_state *TLSR, tgl_peer_id_t id) {
