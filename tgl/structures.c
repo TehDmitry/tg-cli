@@ -1116,6 +1116,7 @@ void tglf_fetch_message_action (struct tgl_state *TLS, struct tgl_message_action
     M->type = tgl_message_action_game_score;
     M->game_id = DS_LVAL (DS_MA->game_id);
     M->score = DS_LVAL (DS_MA->score);
+    break;
   default:
     vlogprintf (E_ERROR, "Unknown magic 0x%08x\n", DS_MA->magic);
     assert (0);
