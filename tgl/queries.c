@@ -872,11 +872,10 @@ void tgl_do_send_code (struct tgl_state *TLS, const char *phone, int phone_len, 
   clear_packet ();
   tgl_do_insert_header (TLS);
   out_int (CODE_auth_send_code);
-  out_cstring (phone, phone_len);
   out_int (0);
+  out_cstring (phone, phone_len);
   out_int (TLS->app_id);
   out_string (TLS->app_hash);
-  out_string ("en");
 
   tglq_send_query (TLS, TLS->DC_working, packet_ptr - packet_buffer, packet_buffer, &send_code_methods, NULL, callback, callback_extra);
 }
