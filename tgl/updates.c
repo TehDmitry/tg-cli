@@ -172,6 +172,11 @@ void tglu_work_update (struct tgl_state *TLS, int check_only, struct tl_ds_updat
       if(DS_U->magic == 0xe40370a3) {
         vlogprintf (E_WARNING, "tglu_work_update skip updateEditMessage\n");
         return;
+      }
+
+      if(DS_U->magic == 0xa20db0e5) {
+        vlogprintf (E_WARNING, "tglu_work_update skip updateDeleteMessages\n");
+        return;
       }      
       assert (DS_U->message);
       if (!DS_U->message->to_id) {
