@@ -31,7 +31,7 @@ Fourth, in peer_name '#' are substitued to '@'. (Not applied to appending of '#%
 
 Clone GitHub Repository
 
-     git clone --recursive https://github.com/TehDmitry/tg.git && cd tg
+     git clone --recursive https://github.com/TehDmitry/tg-cli.git && cd tg
 
 ### Python Support
 
